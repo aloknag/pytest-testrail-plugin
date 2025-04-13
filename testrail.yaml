@@ -1,0 +1,6 @@
+testrail:
+  base_url: "https://yourcompany.testrail.io"
+  username: "your.email@example.com"  # or from env TESTRAIL_USERNAME
+  api_key: "xxx"                      # or from env TESTRAIL_API_KEY
+  project_id: 1
+  suite_id: 1
