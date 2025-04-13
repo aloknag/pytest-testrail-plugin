@@ -1,0 +1,43 @@
+name: Run Pytest Tests with Poetry
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.13]
+
+    steps:
+    # Checkout the code from the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # Install Poetry
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+
+    # Install dependencies using Poetry
+    - name: Install dependencies with Poetry
+      run: |
+        poetry config virtualenvs.create false  # Use the system Python environment (optional)
+        poetry install
+
+    # Run the tests with pytest
+    - name: Run tests with pytest
+      run: |
+        poetry run pytest --maxfail=1 --disable-warnings -q
