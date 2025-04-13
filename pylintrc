@@ -1,0 +1,7 @@
+[MASTER]
+extension-pkg-whitelist=pydantic
+load-plugins=pylint.extensions.docparams
+ignore-patterns=tests/.*
+[MESSAGES CONTROL]
+disable=
+    fixme
