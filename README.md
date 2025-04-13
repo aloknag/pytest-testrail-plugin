@@ -40,15 +40,19 @@ testrail:
 
     You can use the @pytest.mark.testrail_case decorator to associate your tests with TestRail case IDs.
     ```python
+
     import pytest
 
-    @pytest.mark.testrail_case("C123")
-    def test_pass():
+    @pytest.mark.testrail_case([123, 456])
+    def test_example(testrail):
+        # Using the fixture to interact with TestRail
+        testrail.comment(123, "This is a global comment.")
+        testrail.attach(123, "path/to/screenshot.png")
+        testrail.pass_case(123)  # Marks case 123 as passed
+        
+        # Test logic
         assert True
 
-    @pytest.mark.testrail_case(["C124", "C125"])
-    def test_fail():
-        assert False
     ```
 2. Run tests with pytest
 

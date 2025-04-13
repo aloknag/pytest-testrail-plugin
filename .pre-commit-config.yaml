@@ -30,5 +30,5 @@ repos:
             "-rn", # Only display messages
             "-sn", # Don't display the score
             "--rcfile=pylintrc", # Link to your config file
-            "--disable=missing-type-doc,unused-argument",
+            "--disable=missing-type-doc,unused-argument,line-too-long,logging-fstring-interpolation",
           ]
