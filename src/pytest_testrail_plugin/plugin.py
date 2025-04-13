@@ -108,6 +108,10 @@ def pytest_sessionstart(session):
         session: The pytest session.
     """
     config = session.config
+    path = config.getoption("--testrail-config")
+    if not path or not os.path.exists(path):
+        logger.error("TestRail plugin skipped: --testrail-config not provided.")
+        return
     dry_run = config.getoption("--testrail-dry-run")
     mapping = getattr(config, "testrail_case_mapping", {})
     reverse = getattr(config, "testrail_reverse_mapping", {})
@@ -158,6 +162,10 @@ def pytest_runtest_logreport(report):
         return
 
     config = report.config
+    path = config.getoption("--testrail-config")
+    if not path or not os.path.exists(path):
+        logger.error("TestRail plugin skipped: --testrail-config not provided.")
+        return
     dry_run = config.getoption("--testrail-dry-run")
     client = getattr(config, "testrail_client", None)
 
@@ -201,9 +209,12 @@ def testrail_comment(comment, *case_ids):
 
     def _comment_decorator(func):
         def wrapper(request, *args, **kwargs):
-            client = request.config.testrail_client
-            for case_id in case_ids:
-                client.add_comment_to_case(case_id, comment)
+            if not request.config.getoption("--testrail-config"):
+                logger.error("TestRail plugin skipped")
+            else:
+                client = request.config.testrail_client
+                for case_id in case_ids:
+                    client.add_comment_to_case(case_id, comment)
             return func(request, *args, **kwargs)
 
         return wrapper
@@ -222,9 +233,12 @@ def testrail_attach(attachment_path, *case_ids):
 
     def _attach_decorator(func):
         def wrapper(request, *args, **kwargs):
-            client = request.config.testrail_client
-            for case_id in case_ids:
-                client.attach_to_case(case_id, attachment_path)
+            if not request.config.getoption("--testrail-config"):
+                logger.error("TestRail plugin skipped")
+            else:
+                client = request.config.testrail_client
+                for case_id in case_ids:
+                    client.attach_to_case(case_id, attachment_path)
             return func(request, *args, **kwargs)
 
         return wrapper
@@ -242,9 +256,12 @@ def testrail_pass(*case_ids):
 
     def _pass_decorator(func):
         def wrapper(request, *args, **kwargs):
-            client = request.config.testrail_client
-            for case_id in case_ids:
-                client.update_test_result(case_id, 1)  # Passed status
+            if not request.config.getoption("--testrail-config"):
+                logger.error("TestRail plugin skipped")
+            else:
+                client = request.config.testrail_client
+                for case_id in case_ids:
+                    client.update_test_result(case_id, 1)  # Passed status
             return func(request, *args, **kwargs)
 
         return wrapper
