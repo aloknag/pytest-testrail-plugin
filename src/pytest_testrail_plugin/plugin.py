@@ -56,9 +56,8 @@ def pytest_configure(config):
 
     path = config.getoption("--testrail-config")
     if not path or not os.path.exists(path):
-        raise pytest.UsageError(
-            "--testrail-config must be provided and point to a valid YAML file"
-        )
+        logger.error("TestRail plugin skipped: --testrail-config not provided.")
+        return
 
     with open(path, encoding="utf-8") as f:
         raw = yaml.safe_load(f)
